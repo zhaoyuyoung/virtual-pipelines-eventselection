@@ -19,17 +19,27 @@ jobs:
       - name: build
         run: |
           COMPILER=$(root-config --cxx)
-          iFLAGS=$(root-config --cflags --libs)
+          FLAGS=$(root-config --cflags --libs)
           $COMPILER -g -O3 -Wall -Wextra -Wpedantic -o skim skim.cxx $FLAGS
 
-  build_skim_latest:
+      - uses: actions/upload-artifact@v2
+        with:
+          name: skim${{ matrix.version }}
+          path: skim
+
+  skim:
+    needs: build_skim
     runs-on: ubuntu-latest
-    container: rootproject/root:latest
+    container: rootproject/root:6.22.06-conda
     steps:
       - name: checkout repository
         uses: actions/checkout@v2
-      - name: latest
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: skim6.22.06-conda
+
+      - name: skim
         run: |
-          COMPILER=$(root-config --cxx)
-          FLAGS=$(root-config --cflags --libs)
-          $COMPILER -g -O3 -Wall -Wextra -Wpedantic -o skim skim.cxx $FLAGS
+          chmod +x ./skim
+          ./skim 
