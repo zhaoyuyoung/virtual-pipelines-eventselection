@@ -2,6 +2,7 @@
 #
 # In the fit we treat ZTT as signal and fit the signal strength given statistical
 # uncertainties of the observation and normalization uncertainties for each process.
+# signal strength modifier
 
 import argparse
 import ROOT
